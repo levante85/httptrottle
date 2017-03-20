@@ -1,11 +1,11 @@
-# httptrottler
+# httptrottle
 
-[![GoDoc](https://godoc.org/github.com/wind85/httptrottler?status.svg)](https://godoc.org/github.com/wind85/httptrottler)
-[![Build Status](https://travis-ci.org/wind85/httptrottler.svg?branch=master)](https://travis-ci.org/wind85/httptrottler)
-[![Coverage Status](https://coveralls.io/repos/github/wind85/httptrottler/badge.svg?branch=master)](https://coveralls.io/github/wind85/httptrottler?branch=master)
+[![GoDoc](https://godoc.org/github.com/wind85/httptrottle?status.svg)](https://godoc.org/github.com/wind85/httptrottle)
+[![Build Status](https://travis-ci.org/wind85/httptrottle.svg?branch=master)](https://travis-ci.org/wind85/httptrottle)
+[![Coverage Status](https://coveralls.io/repos/github/wind85/httptrottle/badge.svg?branch=master)](https://coveralls.io/github/wind85/httptrottle?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### httptrottler package
+### httptrottle package
 This is a small package the provides a request limiter implemented using golang.org/x/time/rate,
 it limits request by ip address, works behind a load balancer or reverse proxy by inspecting the
 "X-Forwarded-For" and "X-Real-IP" request headers. It provides on middleware and the limiter 
@@ -26,7 +26,7 @@ Pretty simple, there is only one method to create a new parser just call:
 ```
 To use the middleware do it like so:
 ```
-  httptrottler.Handler(limeter, http.Handler)
+  httptrottle.Handler(limeter, http.Handler)
  // in this case http.Handler has been use as a placeholder example.
 ```
 That's pretty much it.
@@ -41,4 +41,4 @@ and most important of all meaning full error messages.
 This software in alpha quality, don't use it in a production environment, it's not even completed.
 
 #### Thank You Notes
-Massive thanks to https://github.com/didip/tollbooth since httptrottler is a fork of it.
+Massive thanks to https://github.com/didip/tollbooth since httptrottle is a fork of it.
