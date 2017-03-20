@@ -1,4 +1,4 @@
-// Package httplimiter provides a simple configurable http rate limiter, limits
+// Package httptrottle provides a simple configurable http rate limiter, limits
 // are imposed by ip, given a ttl and max number of request par second in the
 // constructor arguments, when the configured limit is reached further requests
 // get denied and an 429 status is returned paired with an json error message.
@@ -6,7 +6,7 @@
 // ip address are the headers usually added by reverse proxy and load balancer
 // as well as the RemoteAddr that is present in every http.Request.
 
-package httplimiter
+package httptrottle
 
 import (
 	"errors"
