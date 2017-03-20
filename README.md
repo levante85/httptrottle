@@ -34,8 +34,7 @@ That's pretty much it.
 #### Philosophy
 This software is developed following the "mantra" keep it simple, stupid or better known as
 KISS. Something so simple like a cache with auto eviction should not required over engineered 
-solutions. Though it provides most of the functionality needed by generic configuration files, 
-and most important of all meaning full error messages.
+solutions.
 
 #### Disclaimer
 This software in alpha quality, don't use it in a production environment, it's not even completed.
