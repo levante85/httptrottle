@@ -58,19 +58,17 @@ func (l *Limiter) LimitReached(ip string) bool {
 }
 
 func getIPAdress(r *http.Request, headers []string) string {
-	var ip string
-
 	for _, h := range headers {
-		addresses := strings.Split(r.Header.Get(h), ",")
-		for i := len(addresses) - 1; i >= 0; i-- {
-			ip = strings.TrimSpace(addresses[i])
-			if isValidIp(ip) {
+		if h == "RemoteAddr" {
+			ip := strings.Split(r.RemoteAddr, ":")[0]
+			if isValidIp(strings.TrimSpace(ip)) {
 				return ip
 			}
 		}
 
-		if h == "RemoteAddr" {
-			ip = strings.Split(h, ":")[0]
+		addresses := strings.Split(r.Header.Get(h), ",")
+		for i := len(addresses) - 1; i >= 0; i-- {
+			ip := strings.TrimSpace(addresses[i])
 			if isValidIp(ip) {
 				return ip
 			}
@@ -85,7 +83,6 @@ func isValidIp(ip string) bool {
 	if !realIP.IsGlobalUnicast() || isPrivateSubnet(ip) {
 		return false
 	}
-
 	return true
 }
 
