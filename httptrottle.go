@@ -11,6 +11,7 @@ package httptrottle
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"strings"
@@ -20,6 +21,8 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// New accept two parameters, max which is the number of maximum accepted requests
+// and ttl the time frace in which max n requests are accepted.
 func New(max int, ttl time.Duration) *Limiter {
 	limiter := &Limiter{Max: max, Ttl: ttl, mtx: &sync.RWMutex{}}
 	limiter.ContentType = "application/json"
@@ -30,6 +33,7 @@ func New(max int, ttl time.Duration) *Limiter {
 	return limiter
 }
 
+// Limiter struct almost everything is customizable
 type Limiter struct {
 	ContentType string
 	Max         int
@@ -40,6 +44,8 @@ type Limiter struct {
 	mtx         *sync.RWMutex
 }
 
+// LimitReached check if the given ip is allowed or not, this is a fairly low level
+// interface and should not be called directly.
 func (l *Limiter) LimitReached(ip string) bool {
 	l.mtx.Lock()
 	defer l.mtx.Unlock()
@@ -101,6 +107,8 @@ func limitByIp(l *Limiter, r *http.Request) error {
 	return nil
 }
 
+// Handler is the actual rate limiter middleware takes a valid Limiter as first argument
+// and the handler you want to rate limit.
 func Handler(l *Limiter, next http.Handler) http.Handler {
 	middle := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("X-Rate-Limit-Limit", fmt.Sprintf("%s", l.Max))
@@ -111,6 +119,7 @@ func Handler(l *Limiter, next http.Handler) http.Handler {
 			w.Header().Add("Content-Type", l.ContentType)
 			w.WriteHeader(l.StatusCode)
 			w.Write([]byte(err.Error()))
+			log.Printf("RPS limit reached for ip %s!\n", getIPAdress(r, l.IpLookups))
 			return
 		}
 
