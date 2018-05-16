@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"golang.org/x/time/rate"
-	"strconv"
 )
 
 // New accept two parameters, max which is the number of maximum accepted requests
@@ -93,11 +92,7 @@ func isPrivateSubnet(ip string) (bool, error) {
 		first, second int
 		err error
 	)
-	first, err = strconv.Atoi(strings.Split(ip, ".")[0])
-	if err != nil {
-		return false, err
-	}
-	second, err = strconv.Atoi(strings.Split(ip, ".")[1])
+	_, err = fmt.Sscanf(ip, "%d.%d", &first, &second)
 	if err != nil {
 		return false, err
 	}
