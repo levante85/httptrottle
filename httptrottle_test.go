@@ -21,6 +21,63 @@ func TestNewLimiter(t *testing.T) {
 	}
 }
 
+func TestPrivateClassA(t *testing.T) {
+	ip := "10.0.0.1"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "10.255.255.255"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil  {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "9.255.255.255"
+	if ok, _ := isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+	ip = "11.0.0.0"
+	if ok, _ := isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+}
+
+func TestPrivateClassB(t *testing.T) {
+	ip := "172.16.0.0"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil  {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "172.31.255.255"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil  {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "172.15.0.0"
+	if ok, _ := isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+	ip = "172.32.0.0"
+	if ok, _ := isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+}
+
+func TestPrivateClassC(t *testing.T) {
+	ip := "192.168.0.0"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil  {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "192.168.255.255"
+	if ok, err := isPrivateSubnet(ip); !ok || err != nil  {
+		t.Fatalf("Expected private subnet for %s", ip)
+	}
+	ip = "192.167.255.255"
+	if ok, _ :=  isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+	ip = "192.1689.0.0"
+	if ok, _ := isPrivateSubnet(ip); ok {
+		t.Fatalf("Unexpected private subnet for %s", ip)
+	}
+}
+
 func TestGetIpAddress(t *testing.T) {
 	req := httptest.NewRequest("GET", "http://12.168.0.1", nil)
 	req.RemoteAddr = "12.168.0.1:4390"

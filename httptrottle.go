@@ -80,20 +80,36 @@ func getIPAdress(r *http.Request, headers []string) string {
 
 func isValidIp(ip string) bool {
 	realIP := net.ParseIP(ip)
-	if !realIP.IsGlobalUnicast() || isPrivateSubnet(ip) {
+	isPrivate, _ := isPrivateSubnet(ip)
+	if !realIP.IsGlobalUnicast() || isPrivate {
 		return false
 	}
 	return true
 }
 
-func isPrivateSubnet(ip string) bool {
-	first := strings.Split(ip, ".")[0]
-
-	if first == "10" || first == "192" || first == "176" {
-		return true
+func isPrivateSubnet(ip string) (bool, error) {
+	var (
+		first, second int
+		err error
+	)
+	_, err = fmt.Sscanf(ip, "%d.%d", &first, &second)
+	if err != nil {
+		return false, err
 	}
 
-	return false
+	if first == 10 {
+		return true, nil
+	}
+
+	if first == 172 && second >= 16 && second <= 31  {
+		return true, nil
+	}
+
+	if first == 192 && second == 168  {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func limitByIp(l *Limiter, r *http.Request) error {
